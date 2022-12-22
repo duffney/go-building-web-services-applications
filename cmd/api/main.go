@@ -6,7 +6,6 @@ import (
 	"log"
 	"net/http"
 	"os"
-	"time"
 )
 
 const version = "1.0.0"
@@ -35,18 +34,16 @@ func main() {
 		logger: logger,
 	}
 
-	mux := http.NewServeMux()
-	mux.HandleFunc("/v1/healthcheck", app.healthcheckHandler)
+	addr := fmt.Sprintf(":%d", cfg.port)
 
-	srv := &http.Server{
-		Addr:         fmt.Sprintf(":%d", cfg.port),
-		Handler:      mux,
-		IdleTimeout:  time.Minute,
-		ReadTimeout:  10 * time.Second,
-		WriteTimeout: 30 * time.Second,
+	http.HandleFunc("/", app.notFoundResponse) // route for custom 404 response
+	http.HandleFunc("/v1/healthcheck", app.healthcheckHandler)
+	http.HandleFunc("/v1/movies", app.createMovieHandler)
+	http.HandleFunc("/v1/movies/", app.showMovieHandler)
+
+	logger.Printf("starting %s server on %s", cfg.env, addr)
+	err := http.ListenAndServe(addr, nil)
+	if err != nil {
+		logger.Fatal(err)
 	}
-
-	logger.Printf("starting %s server on %s", cfg.env, srv.Addr)
-	err := srv.ListenAndServe()
-	logger.Fatal(err)
 }
