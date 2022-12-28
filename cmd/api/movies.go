@@ -2,11 +2,10 @@
 package main
 
 import (
-	"encoding/json"
+	"errors"
 	"fmt"
 	"net/http"
 	"strconv"
-	"time"
 
 	"github.com/Duffney/go-building-web-services-applications/internal/data"
 	"github.com/Duffney/go-building-web-services-applications/internal/validator"
@@ -72,7 +71,21 @@ func (app *application) createMovieHandler(w http.ResponseWriter, r *http.Reques
 		return
 	}
 
-	fmt.Fprintf(w, "%+v\n", input)
+	//fmt.Fprintf(w, "%+v\n", input)
+
+	err = app.models.Movies.Insert(movie)
+	if err != nil {
+		app.serverErrorResponse(w, r, err)
+		return
+	}
+
+	headers := make(http.Header)
+	headers.Set("Location", fmt.Sprintf("/v1/movies/%d", movie.ID))
+
+	err = app.writeJSON(w, http.StatusCreated, envelope{"movie": movie}, headers)
+	if err != nil {
+		app.serverErrorResponse(w, r, err)
+	}
 }
 
 func (app *application) showMovieHandler(w http.ResponseWriter, r *http.Request) {
@@ -86,21 +99,38 @@ func (app *application) showMovieHandler(w http.ResponseWriter, r *http.Request)
 
 	// TODO add validation for numeric values only
 
-	movie := data.Movie{
-		ID:        idInt,
-		CreatedAt: time.Now(),
-		Title:     "Casablanca",
-		Runtime:   102,
-		Genres:    []string{"drama", "romance", "war"},
-		Version:   1,
+	// before adding database
+	//movie := data.Movie{
+	//	ID:        idInt,
+	//	CreatedAt: time.Now(),
+	//	Title:     "Casablanca",
+	//	Runtime:   102,
+	//	Genres:    []string{"drama", "romance", "war"},
+	//	Version:   1,
+	//}
+	//env := envelope{"movie": movie}
+	//js, err := json.MarshalIndent(env, "", "\t")
+	//if err != nil {
+	//	app.serverErrorResponse(w, r, err)
+	//}
+
+	//js = append(js, '\n')
+	//w.Header().Set("Content-Type", "application/json")
+	//w.Write(js)
+
+	movie, err := app.models.Movies.Get(idInt)
+	if err != nil {
+		switch {
+		case errors.Is(err, data.ErrRecordNotFound):
+			app.notFoundResponse(w, r)
+		default:
+			app.serverErrorResponse(w, r, err)
+		}
+		return
 	}
-	env := envelope{"movie": movie}
-	js, err := json.MarshalIndent(env, "", "\t")
+
+	err = app.writeJSON(w, http.StatusOK, envelope{"movie": movie}, nil)
 	if err != nil {
 		app.serverErrorResponse(w, r, err)
 	}
-
-	js = append(js, '\n')
-	w.Header().Set("Content-Type", "application/json")
-	w.Write(js)
 }
