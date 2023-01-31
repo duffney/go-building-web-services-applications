@@ -7,9 +7,10 @@ import (
 
 func main() {
 
-	http.HandleFunc("/v1/healthcheck", healthcheck)
+	mux := http.NewServeMux()
+	mux.HandleFunc("/v1/healthcheck", healthcheck)
 
-	err := http.ListenAndServe(":4000", nil)
+	err := http.ListenAndServe(":4000", mux)
 	if err != nil {
 		fmt.Println(err)
 	}
