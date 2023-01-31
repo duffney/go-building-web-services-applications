@@ -3,7 +3,9 @@ package main
 import (
 	"flag"
 	"fmt"
+	"log"
 	"net/http"
+	"os"
 )
 
 const version = "1.0.0"
@@ -13,6 +15,11 @@ type config struct {
 	env  string
 }
 
+type application struct {
+	config config
+	logger *log.Logger
+}
+
 func main() {
 	var cfg config
 
@@ -20,23 +27,20 @@ func main() {
 	flag.StringVar(&cfg.env, "env", "dev", "Environment (dev|staging|prod)")
 	flag.Parse()
 
-	mux := http.NewServeMux()
-	mux.HandleFunc("/v1/healthcheck", healthcheck)
+	logger := log.New(os.Stdout, "", log.Ldate|log.Ltime)
+
+	app := &application{
+		config: cfg,
+		logger: logger,
+	}
 
 	addr := fmt.Sprintf(":%d", cfg.port)
+
+	mux := http.NewServeMux()
+	mux.HandleFunc("/v1/healthcheck", app.healthcheck)
 
 	err := http.ListenAndServe(addr, mux)
 	if err != nil {
 		fmt.Println(err)
 	}
-}
-
-func healthcheck(w http.ResponseWriter, r *http.Request) {
-	if r.Method != http.MethodGet {
-		http.Error(w, http.StatusText(http.StatusMethodNotAllowed), http.StatusMethodNotAllowed)
-		return
-	}
-	fmt.Fprintln(w, "status: available")
-	fmt.Fprintf(w, "environment: %s\n", "dev") // function cannot access cfg.env
-	fmt.Fprintf(w, "version: %s\n", version)
 }
