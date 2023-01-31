@@ -39,6 +39,7 @@ func main() {
 	mux := http.NewServeMux()
 	mux.HandleFunc("/v1/healthcheck", app.healthcheck)
 
+	logger.Printf("starting %s server on %s", cfg.env, addr)
 	err := http.ListenAndServe(addr, mux)
 	if err != nil {
 		fmt.Println(err)
