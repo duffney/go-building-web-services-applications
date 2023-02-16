@@ -58,9 +58,15 @@ func (app *application) getCreateBooksHandler(w http.ResponseWriter, r *http.Req
 				Rating:    4.9,
 				Version:   1,
 			},
+			{
+				ID:        3,          // system generated
+				CreatedAt: time.Now(), // system generated
+				Title:     "The Black Soulstone",
+				Version:   1, // system generated
+			},
 		}
 
-		js, err := json.Marshal(books)
+		js, err := json.MarshalIndent(books, "", "\t")
 		if err != nil {
 			http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
 			return
