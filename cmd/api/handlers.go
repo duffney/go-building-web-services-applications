@@ -3,6 +3,7 @@ package main
 import (
 	"encoding/json"
 	"fmt"
+	"io/ioutil"
 	"net/http"
 	"strconv"
 	"time"
@@ -72,8 +73,27 @@ func (app *application) getCreateBooksHandler(w http.ResponseWriter, r *http.Req
 		}
 	}
 	if r.Method == http.MethodPost {
-		fmt.Fprintln(w, "Added a new book to the reading list")
-		return
+		var input struct {
+			Title     string   `json:"title"`
+			Published int      `json:"published"`
+			Pages     int      `json:"pages"`
+			Genres    []string `json:"genres"`
+			Rating    float64  `json:"rating"`
+		}
+
+		body, err := ioutil.ReadAll(r.Body)
+		if err != nil {
+			http.Error(w, http.StatusText(http.StatusBadRequest), http.StatusBadRequest)
+			return
+		}
+
+		err = json.Unmarshal(body, &input)
+		if err != nil {
+			http.Error(w, http.StatusText(http.StatusBadRequest), http.StatusBadRequest)
+			return
+		}
+
+		fmt.Fprintf(w, "%+v\n", input)
 	}
 }
 
