@@ -3,7 +3,6 @@ package main
 import (
 	"encoding/json"
 	"fmt"
-	"io/ioutil"
 	"net/http"
 	"strconv"
 	"time"
@@ -81,13 +80,7 @@ func (app *application) getCreateBooksHandler(w http.ResponseWriter, r *http.Req
 			Rating    float32  `json:"rating"`
 		}
 
-		body, err := ioutil.ReadAll(r.Body)
-		if err != nil {
-			http.Error(w, http.StatusText(http.StatusBadRequest), http.StatusBadRequest)
-			return
-		}
-
-		err = json.Unmarshal(body, &input)
+		err := app.readJSON(w, r, &input)
 		if err != nil {
 			http.Error(w, http.StatusText(http.StatusBadRequest), http.StatusBadRequest)
 			return
@@ -162,13 +155,7 @@ func (app *application) updateBook(w http.ResponseWriter, r *http.Request) {
 		Version:   1,
 	}
 
-	body, err := ioutil.ReadAll(r.Body)
-	if err != nil {
-		http.Error(w, http.StatusText(http.StatusBadRequest), http.StatusBadRequest)
-		return
-	}
-
-	err = json.Unmarshal(body, &input)
+	err = app.readJSON(w, r, &input)
 	if err != nil {
 		http.Error(w, http.StatusText(http.StatusBadRequest), http.StatusBadRequest)
 		return
