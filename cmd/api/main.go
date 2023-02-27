@@ -9,6 +9,7 @@ import (
 	"os"
 	"time"
 
+	"github.com/Duffney/go-building-web-services-applications/internal/data"
 	_ "github.com/lib/pq"
 )
 
@@ -23,6 +24,7 @@ type config struct {
 type application struct {
 	config config
 	logger *log.Logger
+	models data.Models
 }
 
 func main() {
@@ -33,6 +35,8 @@ func main() {
 	flag.StringVar(&cfg.dsn, "db-dsn", os.Getenv("READINGLIST_DB_DSN"), "PostgreSQL DSN")
 	flag.Parse()
 
+	cfg.dsn = "postgres://postgres:mysecretpassword@localhost/readinglist?sslmode=disable"
+	// postgres://postgres:mysecretpassword@localhost/readinglist?sslmode=disable
 	logger := log.New(os.Stdout, "", log.Ldate|log.Ltime)
 
 	db, err := sql.Open("postgres", cfg.dsn)
@@ -52,6 +56,7 @@ func main() {
 	app := &application{
 		config: cfg,
 		logger: logger,
+		models: data.NewModels(db),
 	}
 
 	addr := fmt.Sprintf(":%d", cfg.port)
