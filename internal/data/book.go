@@ -25,11 +25,11 @@ type BookModel struct {
 
 func (b BookModel) Insert(book *Book) error {
 	query := `
-		INSERT INTO books (title, published, pages, genres)
-		VALUES ($1, $2, $3, $4)
+		INSERT INTO books (title, published, pages, genres, rating)
+		VALUES ($1, $2, $3, $4, $5)
 		RETURNING id, created_at, version`
 
-	args := []interface{}{book.Title, book.Published, book.Pages, pq.Array(book.Genres)}
+	args := []interface{}{book.Title, book.Published, book.Pages, pq.Array(book.Genres), book.Rating}
 	// return the auto generated system values to Go object
 	return b.DB.QueryRow(query, args...).Scan(&book.ID, &book.CreatedAt, &book.Version)
 }
@@ -130,6 +130,7 @@ func (b BookModel) GetAll() ([]*Book, error) {
 			&book.Published,
 			&book.Pages,
 			pq.Array(&book.Genres),
+			&book.Rating,
 			&book.Version,
 		)
 		if err != nil {

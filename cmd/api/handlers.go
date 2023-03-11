@@ -70,6 +70,7 @@ func (app *application) getCreateBooksHandler(w http.ResponseWriter, r *http.Req
 			Published: input.Published,
 			Pages:     input.Pages,
 			Genres:    input.Genres,
+			Rating:    input.Rating,
 		}
 
 		err = app.models.Books.Insert(book)
