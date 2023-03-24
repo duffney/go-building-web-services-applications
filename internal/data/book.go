@@ -40,7 +40,7 @@ func (b BookModel) Get(id int64) (*Book, error) {
 	}
 
 	query := `
-		SELECT id, created_at, title, published, pages, genres, version
+		SELECT id, created_at, title, published, pages, genres, rating, version
 		FROM books
 		WHERE id = $1`
 
@@ -53,6 +53,7 @@ func (b BookModel) Get(id int64) (*Book, error) {
 		&book.Published,
 		&book.Pages,
 		pq.Array(&book.Genres),
+		&book.Rating,
 		&book.Version,
 	)
 
