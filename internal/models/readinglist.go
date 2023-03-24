@@ -3,7 +3,7 @@ package models
 import (
 	"encoding/json"
 	"fmt"
-	"io/ioutil"
+	"io"
 	"net/http"
 )
 
@@ -39,7 +39,7 @@ func (m *ReadinglistModel) GetAll() (*[]Book, error) {
 		return nil, fmt.Errorf("unexpected status: %s", resp.Status)
 	}
 
-	data, err := ioutil.ReadAll(resp.Body)
+	data, err := io.ReadAll(resp.Body)
 	if err != nil {
 		return nil, err
 	}
@@ -65,7 +65,7 @@ func (m *ReadinglistModel) Get(id int64) (*Book, error) {
 		return nil, fmt.Errorf("unexpected status: %s", resp.Status)
 	}
 
-	data, err := ioutil.ReadAll(resp.Body)
+	data, err := io.ReadAll(resp.Body)
 	if err != nil {
 		return nil, err
 	}
