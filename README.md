@@ -29,6 +29,10 @@ This repository contains the following:
 - Commit history that matches the course modules
 
 
-> You can browse the source code here and watch the course on [Pluralsight](https://www.pluralsight.com/courses/go-building-web-services-applications).
+> You can browse the source code here and watch the course on [Pluralsight](https://www.pluralsight.com/courses/go-building-web-services-applications). 👈
 
-[![Building Web Services and Applications with Go](img/ps_logo.png)](https://www.pluralsight.com/courses/go-building-web-services-applications)
+## Additional Resources
+
+- [Let's Go by Alex Edwards](https://lets-go.alexedwards.net/)
+- [Let's Go Further by Alex Edwards](https://lets-go-further.alexedwards.net/)
+- [Web Development w/ Google’s Go (golang) Programming Language with Todd McLeod](https://www.udemy.com/share/1022eC3@HGNszijh2H7xE0osoWjlLfBHvCRaWz-RUaD26EHDi2kfM7xhBweXJyhp8fBEb_GO/)
