@@ -1,6 +1,6 @@
 # Building Web Services and Applications with Go
 
-<a href="https://www.packtpub.com/product/building-modern-cli-applications-in-go/9781804611654?utm_source=github&utm_medium=repository&utm_campaign=9781804611654"><img src="./img/course-page.png" alt="Building Modern CLI Applications in Go" height="256px" align="right"></a>
+<a href="https://app.pluralsight.com/library/courses/go-building-web-services-applications"><img src="./img/course-page.png" alt="Building Modern CLI Applications in Go" height="256px" align="right"></a>
 
 This GitHub repository is dedicated to promoting the Pluralsight course titled "[Building Web Services and Applications with Go](https://www.pluralsight.com/courses/go-building-web-services-applications)". 
 
