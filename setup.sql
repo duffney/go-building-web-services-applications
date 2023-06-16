@@ -9,5 +9,6 @@ CREATE TABLE IF NOT EXISTS books (
     published integer NOT NULL,
     pages integer NOT NULL,
     genres text[] NOT NULL,
-    version integer NOT NULL DEFAULT 1
+    version integer NOT NULL DEFAULT 1,
+    rating integer NOT NULL
 );
